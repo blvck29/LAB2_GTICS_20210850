@@ -43,7 +43,7 @@ public class GameConfig {
         this.fotosTomadas = fotosTomadas;
     }
 
-    public void runGame(){
+    public String[][] runGame(){
 
         int columns = this.numeroColumnas;
         int rows = this.numeroFilas;
@@ -66,6 +66,7 @@ public class GameConfig {
 
         showTablero(Tablero);
 
+        return Tablero;
     }
 
     public void showTablero(String[][] Tablero){
