@@ -31,7 +31,7 @@ public class GameController {
         return "game";
     }
 
-    @GetMapping("/game")
+    @GetMapping("/patito_hule/game")
     public String game(Model model){
         model.addAttribute("filas", filas);
         model.addAttribute("columnas", columnas);
