@@ -1,6 +1,8 @@
 package com.lab2.patitos.Entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GameConfig {
 
@@ -43,8 +45,48 @@ public class GameConfig {
 
     public void runGame(){
 
-        
+        int columns = this.numeroColumnas;
+        int rows = this.numeroFilas;
 
+        String[][] Tablero = new String[rows][columns];
+
+        String[] listaPosiciones = this.posicionesIniciales.split(" ");
+
+        for (String posiciones : listaPosiciones) {
+            String[] arrayCoords = posiciones.split(",");
+            String coordX = arrayCoords[0].split("")[1];
+            String coordY = arrayCoords[1].split("")[0];
+
+            String[][] coordenada = new String[2][1];
+            coordenada[0][0] = coordX;
+            coordenada[1][0] = coordY;
+
+            Tablero[Integer.parseInt(coordX)][Integer.parseInt(coordY)] = "cuack";
+        }
+
+        showTablero(Tablero);
+
+    }
+
+    public void showTablero(String[][] Tablero){
+
+        int columns = this.numeroColumnas;
+        int rows = this.numeroFilas;
+
+        int numerodeCuacks = 0;
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < columns; j++){
+
+                if(Tablero[i][j] == "cuack"){
+                    numerodeCuacks += 1;
+                }
+
+                System.out.println(Tablero[i][j]);
+            }
+        }
+
+        System.out.println(numerodeCuacks);
     }
 
 
