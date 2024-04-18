@@ -3,40 +3,53 @@ package com.lab2.patitos.Controller;
 import com.lab2.patitos.Entity.GameConfig;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "patito_hule", method = RequestMethod.GET)
 public class GameController {
 
+    GameConfig configuracion = new GameConfig();
+
     private String[][] Tablero;
     private String filas;
     private String columnas;
+    private List<String> listaPosiciones = new ArrayList<>();
 
     @GetMapping(value = "")
-    public String main(){
+    public String gameConfig(){
         return "game_config";
     }
 
     @PostMapping(value = "/configurando_juego")
-    public String recibirConfiguraciones(GameConfig configuracion){
+    public String recibirConfiguraciones(@RequestParam(name = "numeroFilas") String numeroFilas,
+                                         @RequestParam(name = "numeroColumnas") String numeroColumnas,
+                                         @RequestParam(name = "posicionesIniciales") String posicionesIniciales,
+                                         @RequestParam(name = "fotosTomadas") String fotosTomadas){
+
+        configuracion.setNumeroFilas(Integer.parseInt(numeroFilas));
+        configuracion.setNumeroColumnas(Integer.parseInt(numeroColumnas));
+        configuracion.setPosicionesIniciales(posicionesIniciales);
+        configuracion.setFotosTomadas(Integer.parseInt(fotosTomadas));
 
         filas = String.valueOf(configuracion.getNumeroFilas());
         columnas = String.valueOf(configuracion.getNumeroColumnas());
-        Tablero = configuracion.runGame();
 
-        return "game";
+        Tablero = configuracion.runGame();
+        listaPosiciones = configuracion.tableroArrayToList(Tablero);
+
+        return "redirect:game";
     }
 
-    @GetMapping("/patito_hule/game")
+    @GetMapping("/game")
     public String game(Model model){
         model.addAttribute("filas", filas);
         model.addAttribute("columnas", columnas);
+        model.addAttribute("listaPosiciones",listaPosiciones);
         model.addAttribute("tablero",Tablero);
-
         return "game";
     }
 

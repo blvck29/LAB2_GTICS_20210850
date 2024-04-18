@@ -69,6 +69,7 @@ public class GameConfig {
         return Tablero;
     }
 
+
     public void showTablero(String[][] Tablero){
 
         int columns = this.numeroColumnas;
@@ -89,6 +90,43 @@ public class GameConfig {
 
         System.out.println(numerodeCuacks);
     }
+
+    public List<String> tableroArrayToList(String[][] Tablero){
+
+        List<String> listaPosiciones = new ArrayList<>();
+        int columns = this.numeroColumnas;
+        int rows = this.numeroFilas;
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < columns; j++){
+
+                if(Tablero[i][j] == "cuack"){
+                    listaPosiciones.add("cuack");
+                } else {
+                    listaPosiciones.add("///");
+                }
+            }
+        }
+        return listaPosiciones;
+    }
+
+    public int cantidadDePatitos(String[][] Tablero){
+
+        int columns = this.numeroColumnas;
+        int rows = this.numeroFilas;
+
+        int numerodeCuacks = 0;
+
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < columns; j++){
+
+                if(Tablero[i][j] == "cuack"){
+                    numerodeCuacks += 1;
+                }
+            }
+        }
+        return numerodeCuacks;
+     }
 
 
 }
