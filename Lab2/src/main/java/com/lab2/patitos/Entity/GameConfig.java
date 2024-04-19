@@ -59,7 +59,7 @@ public class GameConfig {
 
             for(int j = 0; j < rows; j++){
                 for(int k = 0; k < columns; k++){
-                    
+
                     int x = j;
                     int y = k;
 
