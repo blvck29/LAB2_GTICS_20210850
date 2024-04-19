@@ -8,6 +8,8 @@ public class GameConfig {
     private int numeroColumnas;
     private String posicionesIniciales;
     private int fotosTomadas;
+    private int estadoEstable;
+    private int iteracionesFaltantes;
 
     public int getNumeroFilas() {
         return numeroFilas;
@@ -41,10 +43,36 @@ public class GameConfig {
         this.fotosTomadas = fotosTomadas;
     }
 
+    public int getEstadoEstable() {
+        return estadoEstable;
+    }
 
-    public List<String> execGame(){
+    public void setEstadoEstable(int estadoEstable) {
+        this.estadoEstable = estadoEstable;
+    }
 
-        List<String[][]> listaDeTableros = new ArrayList<>(this.fotosTomadas);
+    public int getIteracionesFaltantes() {
+        return iteracionesFaltantes;
+    }
+
+    public void setIteracionesFaltantes(int iteracionesFaltantes) {
+        this.iteracionesFaltantes = iteracionesFaltantes;
+    }
+
+    public List<String> gameLog(int iteraciones){
+
+        List<String[][]> listaDeTableros = execGame(iteraciones);
+
+        return listaDeTablerosToList(listaDeTableros);
+    }
+
+    public List<String[][]> execGame(int iteraciones){
+
+        List<String[][]> listaDeTableros = new ArrayList<>(iteraciones);
+
+        estadoEstable = 0;
+        iteracionesFaltantes = 0;
+        int i = 0;
 
         String[][] tableroInicial = iniciarTablero();
         listaDeTableros.add(tableroInicial);
@@ -53,12 +81,14 @@ public class GameConfig {
         int columns = this.numeroColumnas;
         int rows = this.numeroFilas;
 
-        for (int i = 1; i<(this.fotosTomadas); i++){
+        while (true){
 
             String[][] newTablero = new String[rows][columns];
+            int cuentaIguales = 0;
 
             for(int j = 0; j < rows; j++){
                 for(int k = 0; k < columns; k++){
+
 
                     int x = j;
                     int y = k;
@@ -122,22 +152,38 @@ public class GameConfig {
                         System.out.println("El patito debe morir");
                     }
 
+                    if(newTablero[x][y] == oldTablero[x][y]){
+                        cuentaIguales++;
+                    }
 
                 }
             }
-
             listaDeTableros.add(newTablero);
+
             oldTablero = newTablero;
 
+            if (cuentaIguales == rows*columns){
+                estadoEstable = i;
 
+                for (int f = i; f<this.fotosTomadas; f++){
+                    listaDeTableros.add(f,newTablero);
+                }
+
+                break;
+            }
+
+            i++;
         }
 
+        estadoEstable = estadoEstable+1;
+        iteracionesFaltantes = this.fotosTomadas - estadoEstable;
+        iteracionesFaltantes = Math.abs(iteracionesFaltantes);
 
-        System.out.println("A" + Arrays.deepToString(listaDeTableros.get(0)));
-        System.out.println("B" + Arrays.deepToString(listaDeTableros.get(1)));
 
-        return listaDeTablerosToList(listaDeTableros);
+        System.out.println(estadoEstable);
+        System.out.println(iteracionesFaltantes);
 
+        return listaDeTableros;
     }
 
     public String[][] iniciarTablero(){

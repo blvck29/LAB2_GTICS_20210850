@@ -17,6 +17,7 @@ public class GameController {
     private String filas;
     private String columnas;
     private int cantidadCasillas;
+    private int cantidadFotos;
     private List<Integer> indicesFotos = new ArrayList<>();
     private List<String> listaPosiciones = new ArrayList<>();
 
@@ -40,8 +41,9 @@ public class GameController {
         columnas = String.valueOf(configuracion.getNumeroColumnas());
 
         cantidadCasillas = Integer.parseInt(filas) * Integer.parseInt(columnas);
+        cantidadFotos = Integer.parseInt(fotosTomadas);
 
-        listaPosiciones = configuracion.execGame();
+        listaPosiciones = configuracion.gameLog(Integer.parseInt(fotosTomadas));
         indicesFotos = configuracion.getIndicesFotos();
 
         return "redirect:game";
@@ -50,10 +52,13 @@ public class GameController {
     @GetMapping("/game")
     public String game(Model model){
         model.addAttribute("indicesFotos", indicesFotos);
+        model.addAttribute("cantidadFotos", cantidadFotos);
         model.addAttribute("filas", filas);
         model.addAttribute("columnas", columnas);
         model.addAttribute("listaPosiciones",listaPosiciones);
         model.addAttribute("cantidadCasillas", cantidadCasillas);
+        model.addAttribute("estadoEstable", configuracion.getEstadoEstable());
+        model.addAttribute("iteracionesFaltantes", configuracion.getIteracionesFaltantes());
         return "game";
     }
 
