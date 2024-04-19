@@ -1,9 +1,6 @@
 package com.lab2.patitos.Entity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GameConfig {
 
@@ -45,29 +42,102 @@ public class GameConfig {
     }
 
 
-    public List<String[][]> execGame(){
-        List<String[][]> listaDeMatrices = new ArrayList<>();
+    public List<String> execGame(){
 
-        String[][] Tablero = iniciarTablero();
-        listaDeMatrices.add(Tablero);
+        List<String[][]> listaDeTableros = new ArrayList<>(this.fotosTomadas);
 
+        String[][] tableroInicial = iniciarTablero();
+        listaDeTableros.add(tableroInicial);
+
+        String[][] oldTablero = tableroInicial;
         int columns = this.numeroColumnas;
         int rows = this.numeroFilas;
 
-
         for (int i = 1; i<(this.fotosTomadas); i++){
 
+            String[][] newTablero = new String[rows][columns];
 
             for(int j = 0; j < rows; j++){
                 for(int k = 0; k < columns; k++){
-                    Tablero = algoritmoDelPatito(Tablero, String.valueOf(j) , String.valueOf(k));
+                    
+                    int x = j;
+                    int y = k;
+
+                    boolean existePato = false;
+
+                    try {
+
+                        if (oldTablero[x][y].equals("cuack")){
+                            existePato = true;
+                        }
+
+                    } catch (NullPointerException nullEx) {
+                        System.out.println("No hay pato en esta nueva posicion");
+                    }
+
+
+                    int patoCounter = 0;
+
+                    List<Integer> minusList = Arrays.asList(-1, -1, 0, -1, 1, -1, -1, 1, 0, 1, 1, 1, -1, 0, 1, 0);
+
+                    for (int z = 0; z<16; z=z+2){
+                        String pato;
+
+                        try {
+                            try {
+                                pato = oldTablero[x + minusList.get(z)][y + minusList.get(z+1)];
+                            } catch (ArrayIndexOutOfBoundsException outEx) {
+                                pato = "nulo";
+                            }
+
+                            if (pato.equals("nulo") || pato.isEmpty()){
+                                System.out.println("Se salió del arreglo");
+                            } else if (pato.equals("cuack")) {
+                                patoCounter++;
+                                System.out.println("Pato encontrado");
+                            }
+
+                        } catch (NullPointerException nullEx) {
+                            System.out.println("El pato es nulo");
+                        }
+
+                    }
+
+                    System.out.println();
+                    System.out.println("##########################################");
+                    System.out.println("Resultados para Algoritmo en: [" + x + " ; " + y + "]");
+                    System.out.println("Cantidad de patos hallados: " + patoCounter);
+
+                    if (patoCounter == 3){
+                        newTablero[x][y] = "cuack";
+                        System.out.println("El patito sobrevive");
+                    } else if (patoCounter == 2 && existePato){
+                        newTablero[x][y] = "cuack";
+                        System.out.println("El patito sobrevive");
+                    } else if (patoCounter == 2 && !existePato){
+                        newTablero[x][y] = null;
+                        System.out.println("El patito debe morir");
+                    } else {
+                        newTablero[x][y] = null;
+                        System.out.println("El patito debe morir");
+                    }
+
+
                 }
             }
 
-            listaDeMatrices.add(Tablero);
+            listaDeTableros.add(newTablero);
+            oldTablero = newTablero;
+
+
         }
 
-        return listaDeMatrices;
+
+        System.out.println("A" + Arrays.deepToString(listaDeTableros.get(0)));
+        System.out.println("B" + Arrays.deepToString(listaDeTableros.get(1)));
+
+        return listaDeTablerosToList(listaDeTableros);
+
     }
 
     public String[][] iniciarTablero(){
@@ -87,7 +157,6 @@ public class GameConfig {
 
             Tablero[Integer.parseInt(coordX)][Integer.parseInt(coordY)] = "cuack";
         }
-
         return Tablero;
     }
 
@@ -158,45 +227,40 @@ public class GameConfig {
         return Tablero;
     }
 
+    public List<String> listaDeTablerosToList(List<String[][]> listaDeTableros){
 
-    public void showTablero(String[][] Tablero){
+        List<String> listaTotalDePosiciones = new ArrayList<>();
 
         int columns = this.numeroColumnas;
         int rows = this.numeroFilas;
 
-        int numerodeCuacks = 0;
+        for (int i = 0; i<(this.fotosTomadas); i++){
 
-        for(int i = 0; i < rows; i++){
-            for(int j = 0; j < columns; j++){
+            String[][] tableroActual = listaDeTableros.get(i);
 
-                if(Objects.equals(Tablero[i][j], "cuack")){
-                    numerodeCuacks += 1;
+            for(int j = 0; j < rows; j++){
+                for(int k = 0; k < columns; k++){
+
+                    if(Objects.equals(tableroActual[j][k], "cuack")){
+                        listaTotalDePosiciones.add("cuack");
+                    } else {
+                        listaTotalDePosiciones.add("///");
+                    }
+
                 }
-
-                System.out.println(Tablero[i][j]);
             }
         }
-
-        System.out.println(numerodeCuacks);
+        System.out.println(listaTotalDePosiciones);
+        return listaTotalDePosiciones;
     }
 
-    public List<String> tableroArrayToList(String[][] Tablero){
+    public List<Integer> getIndicesFotos (){
+        List<Integer> indicesFotos = new ArrayList<>();
 
-        List<String> listaPosiciones = new ArrayList<>();
-        int columns = this.numeroColumnas;
-        int rows = this.numeroFilas;
-
-        for(int i = 0; i < rows; i++){
-            for(int j = 0; j < columns; j++){
-
-                if(Objects.equals(Tablero[i][j], "cuack")){
-                    listaPosiciones.add("cuack");
-                } else {
-                    listaPosiciones.add("///");
-                }
-            }
+        for (int i = 0; i<(this.fotosTomadas); i++){
+            indicesFotos.add(i);
         }
-        return listaPosiciones;
+        return indicesFotos;
     }
 
     public int cantidadDePatitos(String[][] Tablero){
