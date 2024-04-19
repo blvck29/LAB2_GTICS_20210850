@@ -54,12 +54,9 @@ public class GameConfig {
 
         for (String posiciones : listaPosiciones) {
             String[] arrayCoords = posiciones.split(",");
-            String coordX = arrayCoords[0].split("")[1];
-            String coordY = arrayCoords[1].split("")[0];
 
-            String[][] coordenada = new String[2][1];
-            coordenada[0][0] = coordX;
-            coordenada[1][0] = coordY;
+            String coordX = arrayCoords[0].replaceAll("[^0-9]", "");
+            String coordY = String.valueOf(Integer.parseInt(arrayCoords[1].replaceAll("[^0-9]", "")));
 
             Tablero[Integer.parseInt(coordX)][Integer.parseInt(coordY)] = "cuack";
         }
