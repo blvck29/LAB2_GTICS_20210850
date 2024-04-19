@@ -14,10 +14,12 @@ public class GameController {
 
     GameConfig configuracion = new GameConfig();
 
+    private List<String[][]> listaDeMatrices;
     private String[][] Tablero;
     private String filas;
     private String columnas;
     private List<String> listaPosiciones = new ArrayList<>();
+    private int cantidadPatitos;
 
     @GetMapping(value = "")
     public String gameConfig(){
@@ -38,8 +40,10 @@ public class GameController {
         filas = String.valueOf(configuracion.getNumeroFilas());
         columnas = String.valueOf(configuracion.getNumeroColumnas());
 
-        Tablero = configuracion.runGame();
+        listaDeMatrices = configuracion.execGame();
+        Tablero = configuracion.iniciarTablero();
         listaPosiciones = configuracion.tableroArrayToList(Tablero);
+        cantidadPatitos = configuracion.cantidadDePatitos(Tablero);
 
         return "redirect:game";
     }
@@ -49,6 +53,7 @@ public class GameController {
         model.addAttribute("filas", filas);
         model.addAttribute("columnas", columnas);
         model.addAttribute("listaPosiciones",listaPosiciones);
+        model.addAttribute("cantidadPatitos",cantidadPatitos);
         model.addAttribute("tablero",Tablero);
         return "game";
     }

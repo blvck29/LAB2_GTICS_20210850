@@ -14,14 +14,15 @@
 <div class="container" style="padding-top: 40px">
   <h2 class="pb-4">Lista de Fotografías tomadas por el Dron</h2>
 
+  <div>
+    <div th:style="${'display:grid; gap:1px; border: solid 1px #000000; width: fit-content;' + 'grid-template-columns: repeat(' + columnas + ', 30px);' + 'grid-template-rows: repeat(' + filas + ', 30px);'}">
 
-  <div th:style="${'display:grid; gap:1px; border: solid 1px #000000; width: fit-content;' + 'grid-template-columns: repeat(' + columnas + ', 30px);' + 'grid-template-rows: repeat(' + filas + ', 30px);'}">
+      <div th:each="casilla : ${listaPosiciones}">
+        <div th:if="${casilla == 'cuack'}" style="background-color: #FFA500; height: 100%; width: 100%;"></div>
+        <div th:if="${casilla == '///'}" style="background-color: #87CEEB; height: 100%; width: 100%;"></div>
+      </div>
 
-    <div th:each="casilla : ${listaPosiciones}">
-      <div th:if="${casilla == 'cuack'}" style="background-color: #FFA500; height: 100%; width: 100%;"></div>
-      <div th:if="${casilla == '///'}" style="background-color: #87CEEB; height: 100%; width: 100%;"></div>
     </div>
-
   </div>
 
 
